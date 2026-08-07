@@ -1,0 +1,19 @@
+INSANOS MC - MAPA INTERATIVO
+
+ARQUIVO PRINCIPAL:
+mapa_insanos.html
+
+COMO ABRIR:
+1. Dê dois cliques em mapa_insanos.html.
+2. O mapa abrirá diretamente no navegador.
+3. É necessária conexão com a internet apenas para carregar o mapa base do OpenStreetMap e as bibliotecas Leaflet.
+
+DADOS:
+- Total de pontos: 1411
+- QG: 1
+- Regionais: 129
+- Divisões: 1281
+- UFs identificadas/inferidas: 27
+- Registros ainda sem UF: 18
+
+O HTML possui os dados incorporados e NÃO depende do site original do motoclube.
