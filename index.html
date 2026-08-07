@@ -3,7 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0b0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Insanos Mapa">
 <title>Insanos MC — Mapa Nacional</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="Images/icon-192.png">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
@@ -374,6 +380,12 @@ window.addEventListener("resize",()=>{
 
 populateFilters();
 render(true);
+
+if ("serviceWorker" in navigator) {
+ window.addEventListener("load", () => {
+   navigator.serviceWorker.register("sw.js").catch(() => {});
+ });
+}
 </script>
 </body>
 </html>
