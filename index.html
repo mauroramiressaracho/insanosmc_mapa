@@ -281,9 +281,25 @@ const markerByIndex = new Map();
 function populateFilters() {
  const ufs = [...new Set(DATA.map(x=>x.uf).filter(Boolean))].sort();
  ufs.forEach(u=>els.uf.insertAdjacentHTML("beforeend",`<option>${esc(u)}</option>`));
+ populateRegionalOptions();
+}
 
- const regs = [...new Set(DATA.filter(x=>x.tipo==="Regional").map(x=>x.nome).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+function populateRegionalOptions() {
+ const selectedUf = els.uf.value;
+ const currentRegional = els.regional.value;
+ const regs = [...new Set(DATA.filter(x=>
+   x.tipo==="Regional" &&
+   (!selectedUf || x.uf===selectedUf)
+ ).map(x=>x.nome).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+
+ els.regional.innerHTML = `<option value="">Todas</option>`;
  regs.forEach(r=>els.regional.insertAdjacentHTML("beforeend",`<option value="${esc(r)}">${esc(r)}</option>`));
+
+ if(regs.includes(currentRegional)){
+   els.regional.value = currentRegional;
+ } else {
+   els.regional.value = "";
+ }
 }
 
 function selectedTypes() {
@@ -401,11 +417,17 @@ document.addEventListener("click",async e=>{
  }
 });
 
-[els.search,els.uf,els.regional].forEach(el=>el.addEventListener("input",()=>render(false)));
+els.search.addEventListener("input",()=>render(false));
+els.uf.addEventListener("input",()=>{
+ populateRegionalOptions();
+ render(false);
+});
+els.regional.addEventListener("input",()=>render(false));
 document.querySelectorAll(".typeCheck").forEach(el=>el.addEventListener("change",()=>render(false)));
 
 document.getElementById("reset").addEventListener("click",()=>{
  els.search.value=""; els.uf.value=""; els.regional.value="";
+ populateRegionalOptions();
  document.querySelectorAll(".typeCheck").forEach(x=>x.checked=true);
  render(true);
 });
