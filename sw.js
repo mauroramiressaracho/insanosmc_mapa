@@ -1,4 +1,4 @@
-const CACHE_NAME = "insanos-mapa-v1";
+const CACHE_NAME = "insanos-mapa-v2";
 const APP_SHELL = [
   "./",
   "./index.html",

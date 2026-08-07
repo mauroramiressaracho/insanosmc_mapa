@@ -64,7 +64,8 @@ input:focus,select:focus{outline:1px solid var(--accent);border-color:var(--acce
 .popup-title{font-size:14px;font-weight:800;margin-bottom:7px}
 .popup-type{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#aaa;margin-bottom:7px}
 .popup-row{font-size:12px;margin:4px 0}
-.popup-link{display:inline-block;margin-top:8px;text-decoration:none;background:#d9252a;color:#fff!important;padding:7px 9px;border-radius:7px;font-size:12px;font-weight:700}
+.popup-link,.popup-share{display:inline-block;margin-top:8px;text-decoration:none;background:#d9252a;color:#fff!important;padding:7px 9px;border-radius:7px;font-size:12px;font-weight:700}
+.popup-share{width:auto;height:auto;border:0;cursor:pointer}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#17171b;color:#fff}
 .leaflet-control-zoom a{background:#17171b!important;color:#fff!important;border-color:#333!important}
 .marker-cluster div{font-weight:800}
@@ -302,13 +303,21 @@ function getFiltered() {
 function markerPopup(x) {
  const inferred = x.uf_inferida ? " <small>(inferida)</small>" : "";
  const regional = x.regional && x.regional!==x.nome ? `<div class="popup-row"><b>Regional:</b> ${esc(x.regional)}</div>` : "";
+ const routeUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${x.lat},${x.lng}`)}&travelmode=driving`;
+ const shareText = [
+   `${x.nome}`,
+   `${x.tipo}${x.uf ? ` - ${x.uf}` : ""}`,
+   x.regional && x.regional!==x.nome ? `Regional: ${x.regional}` : "",
+   `Coordenadas: ${x.lat}, ${x.lng}`,
+   `Rota no Google Maps: ${routeUrl}`
+ ].filter(Boolean).join("\n");
  return `
    <div class="popup-title">${esc(x.nome)}</div>
    <div class="popup-type">${esc(x.tipo)}</div>
    <div class="popup-row"><b>UF:</b> ${esc(x.uf||"Não informada")}${inferred}</div>
    ${regional}
    <div class="popup-row"><b>Coordenadas:</b> ${x.lat}, ${x.lng}</div>
-   <a class="popup-link" href="${esc(x.link_maps)}" target="_blank" rel="noopener">Abrir no Google Maps</a>`;
+   <button class="popup-share" type="button" data-title="${esc(x.nome)}" data-text="${esc(shareText)}" data-url="${esc(routeUrl)}">Compartilhar</button>`;
 }
 
 function render(fit=false) {
@@ -356,6 +365,35 @@ els.results.addEventListener("click",e=>{
    cluster.zoomToShowLayer(marker,()=>marker.openPopup());
  }
  if(isMobileLayout()) setMobileMenu(false);
+});
+
+document.addEventListener("click",async e=>{
+ const button=e.target.closest(".popup-share");
+ if(!button)return;
+
+ const title=button.dataset.title || "Insanos MC - Mapa Nacional";
+ const text=button.dataset.text || "";
+ const url=button.dataset.url || "";
+ const payload={title,text,url};
+
+ if(navigator.share){
+   try{
+     await navigator.share(payload);
+     return;
+   }catch(err){
+     if(err && err.name==="AbortError") return;
+   }
+ }
+
+ const fallbackText=[text,url].filter(Boolean).join("\n");
+ try{
+   await navigator.clipboard.writeText(fallbackText);
+   const original=button.textContent;
+   button.textContent="Link copiado";
+   setTimeout(()=>button.textContent=original,1800);
+ }catch(err){
+   window.open(`https://wa.me/?text=${encodeURIComponent(fallbackText)}`,"_blank","noopener");
+ }
 });
 
 [els.search,els.uf,els.regional].forEach(el=>el.addEventListener("input",()=>render(false)));
