@@ -53,6 +53,8 @@ input:focus,select:focus{outline:1px solid var(--accent);border-color:var(--acce
 .map-title span{font-size:11px;color:var(--muted)}
 .legend{pointer-events:auto;background:rgba(12,12,14,.90);backdrop-filter:blur(8px);border:1px solid var(--line);padding:9px 11px;border-radius:10px;font-size:11px;color:#ddd;display:flex;gap:12px;align-items:center}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.legend .pin-dot{width:10px;height:10px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);position:relative;top:1px}
+.legend .pin-dot::after{content:"";position:absolute;width:4px;height:4px;border-radius:50%;background:#fff;left:3px;top:3px}
 .popup-title{font-size:14px;font-weight:800;margin-bottom:7px}
 .popup-type{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#aaa;margin-bottom:7px}
 .popup-row{font-size:12px;margin:4px 0}
@@ -61,6 +63,10 @@ input:focus,select:focus{outline:1px solid var(--accent);border-color:var(--acce
 .leaflet-control-zoom a{background:#17171b!important;color:#fff!important;border-color:#333!important}
 .marker-cluster div{font-weight:800}
 .custom-pin{border-radius:50%;border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.6)}
+.map-pin{width:24px;height:24px;border-radius:50% 50% 50% 0;position:relative;transform:rotate(-45deg);box-shadow:0 2px 6px rgba(0,0,0,.45)}
+.map-pin::after{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:#fff;left:7.5px;top:7.5px}
+.map-pin-qg{background:#050505}
+.map-pin-regional{background:#d9252a}
 .mobile-open,.mobile-close{display:none}
 .mobile-backdrop{display:none}
 @media(max-width:850px){
@@ -169,8 +175,8 @@ input:focus,select:focus{outline:1px solid var(--accent);border-color:var(--acce
         </div>
       </div>
       <div class="legend">
-        <span><i style="background:#111"></i>QG</span>
-        <span><i style="background:#d9252a"></i>Regional</span>
+        <span><i class="pin-dot" style="background:#111"></i>QG</span>
+        <span><i class="pin-dot" style="background:#d9252a"></i>Regional</span>
         <span><i style="background:#4a4a55"></i>Divisão</span>
       </div>
     </div>
@@ -225,6 +231,16 @@ function esc(s) {
 
 function pinIcon(tipo) {
  const bg = tipo==="QG" ? "#111111" : tipo==="Regional" ? "#d9252a" : "#4a4a55";
+ if(tipo==="QG" || tipo==="Regional"){
+   const cls = tipo==="QG" ? "map-pin-qg" : "map-pin-regional";
+   return L.divIcon({
+     className:"",
+     html:`<div class="map-pin ${cls}"></div>`,
+     iconSize:[24,24],
+     iconAnchor:[12,24],
+     popupAnchor:[0,-24]
+   });
+ }
  const size = tipo==="QG" ? 18 : tipo==="Regional" ? 15 : 11;
  return L.divIcon({
    className:"",
