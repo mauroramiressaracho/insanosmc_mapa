@@ -67,7 +67,7 @@ input:focus,select:focus{outline:1px solid var(--accent);border-color:var(--acce
 .map-pin::after{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:#fff;left:7.5px;top:7.5px}
 .map-pin-qg{background:#050505}
 .map-pin-regional{background:#d9252a}
-.mobile-open,.mobile-close{display:none}
+.mobile-bar,.mobile-open,.mobile-close{display:none}
 .mobile-backdrop{display:none}
 @media(max-width:850px){
  html,body{overflow:hidden}
@@ -91,22 +91,27 @@ input:focus,select:focus{outline:1px solid var(--accent);border-color:var(--acce
  .results-head{padding:10px 12px 7px}
  .results{padding:0 8px 10px}
  .card{padding:11px 10px}
- .map-top{top:10px;left:10px;right:10px;align-items:flex-start}
+ .mobile-bar{position:absolute;z-index:900;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;background:rgba(11,11,13,.96);border-bottom:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.22)}
+ .mobile-bar-brand{display:flex;align-items:center;gap:10px;min-width:0}
+ .mobile-bar-logo{width:40px;height:40px;display:block;object-fit:contain;flex:0 0 40px}
+ .mobile-bar-title{min-width:0}
+ .mobile-bar-title strong{display:block;font-size:15px;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .mobile-bar-title span{display:block;margin-top:3px;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .mobile-open{display:flex;pointer-events:auto;align-items:center;justify-content:center;gap:8px;background:#202026;border-color:#3a3a43;color:white;width:auto;min-width:96px;height:42px;padding:0 12px;flex:0 0 auto;font-weight:800}
+ .mobile-open::before{content:"";width:16px;height:12px;background:linear-gradient(#fff 0 0) top/100% 2px no-repeat,linear-gradient(#fff 0 0) center/100% 2px no-repeat,linear-gradient(#fff 0 0) bottom/100% 2px no-repeat}
+ .map-top{top:76px;left:10px;right:10px;align-items:flex-start}
  .map-top>div:first-child{width:100%;min-width:0}
- .mobile-open{display:block;pointer-events:auto;background:var(--accent);border:none;color:white;width:auto;min-width:92px;padding:0 12px;flex:0 0 auto}
- .map-title{min-width:0;max-width:calc(100vw - 122px);padding:8px 10px;border-radius:8px}
- .map-title b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
- .map-title span{display:none}
+ .map-title{display:none}
  .legend{display:none}
- .leaflet-control-zoom{margin-top:64px!important}
+ .leaflet-control-zoom{margin-top:72px!important}
  .leaflet-popup-content{max-width:72vw}
 }
 @media(max-width:420px){
  .row{grid-template-columns:1fr}
  .type-toggles{gap:5px}
  .chip{font-size:11px;padding:6px 7px}
- .map-title{display:none}
- .mobile-open{min-width:108px}
+ .mobile-open{min-width:84px;padding:0 10px}
+ .mobile-bar-title span{display:none}
 }
 </style>
 </head>
@@ -166,9 +171,18 @@ input:focus,select:focus{outline:1px solid var(--accent);border-color:var(--acce
 
   <section class="map-wrap">
     <div id="map"></div>
+    <div class="mobile-bar">
+      <div class="mobile-bar-brand">
+        <img class="mobile-bar-logo" src="Images/logo_insanos.png" alt="Insanos Moto Clube">
+        <div class="mobile-bar-title">
+          <strong>INSANOS MC</strong>
+          <span>Mapa Nacional</span>
+        </div>
+      </div>
+      <button class="mobile-open" id="mobileOpen" type="button" aria-controls="sidebar" aria-expanded="false">Locais</button>
+    </div>
     <div class="map-top">
       <div style="display:flex;gap:8px">
-        <button class="mobile-open" id="mobileOpen" type="button" aria-controls="sidebar" aria-expanded="false">Menu</button>
         <div class="map-title">
           <b>Presença Nacional — Insanos MC</b>
           <span>Clique em um ponto para visualizar os detalhes</span>
