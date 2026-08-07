@@ -74,6 +74,8 @@ input:focus,select:focus{outline:1px solid var(--accent);border-color:var(--acce
 .map-pin::after{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:#fff;left:7.5px;top:7.5px}
 .map-pin-qg{background:#050505}
 .map-pin-regional{background:#d9252a}
+.map-pin-divisao{width:20px;height:20px;background:#4a4a55}
+.map-pin-divisao::after{width:7px;height:7px;left:6.5px;top:6.5px}
 .mobile-bar,.mobile-open,.mobile-close{display:none}
 .mobile-backdrop{display:none}
 @media(max-width:850px){
@@ -203,7 +205,7 @@ input:focus,select:focus{outline:1px solid var(--accent);border-color:var(--acce
       <div class="legend">
         <span><i class="pin-dot" style="background:#111"></i>QG</span>
         <span><i class="pin-dot" style="background:#d9252a"></i>Regional</span>
-        <span><i style="background:#4a4a55"></i>Divisão</span>
+        <span><i class="pin-dot" style="background:#4a4a55"></i>Divisão</span>
       </div>
     </div>
   </section>
@@ -256,18 +258,19 @@ function esc(s) {
 }
 
 function pinIcon(tipo) {
- const bg = tipo==="QG" ? "#111111" : tipo==="Regional" ? "#d9252a" : "#4a4a55";
- if(tipo==="QG" || tipo==="Regional"){
-   const cls = tipo==="QG" ? "map-pin-qg" : "map-pin-regional";
+ if(tipo==="QG" || tipo==="Regional" || tipo==="Divisão"){
+   const cls = tipo==="QG" ? "map-pin-qg" : tipo==="Regional" ? "map-pin-regional" : "map-pin-divisao";
+   const size = tipo==="Divisão" ? 20 : 24;
    return L.divIcon({
      className:"",
      html:`<div class="map-pin ${cls}"></div>`,
-     iconSize:[24,24],
-     iconAnchor:[12,24],
-     popupAnchor:[0,-24]
+     iconSize:[size,size],
+     iconAnchor:[size/2,size],
+     popupAnchor:[0,-size]
    });
  }
- const size = tipo==="QG" ? 18 : tipo==="Regional" ? 15 : 11;
+ const bg = "#4a4a55";
+ const size = 11;
  return L.divIcon({
    className:"",
    html:`<div class="custom-pin" style="width:${size}px;height:${size}px;background:${bg}"></div>`,
