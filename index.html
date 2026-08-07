@@ -418,11 +418,11 @@ document.addEventListener("click",async e=>{
 });
 
 els.search.addEventListener("input",()=>render(false));
-els.uf.addEventListener("input",()=>{
+els.uf.addEventListener("change",()=>{
  populateRegionalOptions();
  render(false);
 });
-els.regional.addEventListener("input",()=>render(false));
+els.regional.addEventListener("change",()=>render(false));
 document.querySelectorAll(".typeCheck").forEach(el=>el.addEventListener("change",()=>render(false)));
 
 document.getElementById("reset").addEventListener("click",()=>{
