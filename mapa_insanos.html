@@ -376,7 +376,7 @@ document.addEventListener("click",async e=>{
  const url=button.dataset.url || "";
  const payload={title,text,url};
 
- if(navigator.share){
+ if(isMobileLayout() && navigator.share){
    try{
      await navigator.share(payload);
      return;
@@ -385,11 +385,11 @@ document.addEventListener("click",async e=>{
    }
  }
 
- const fallbackText=[text,url].filter(Boolean).join("\n");
+ const fallbackText=text || url;
  try{
    await navigator.clipboard.writeText(fallbackText);
    const original=button.textContent;
-   button.textContent="Link copiado";
+   button.textContent="Informativo copiado";
    setTimeout(()=>button.textContent=original,1800);
  }catch(err){
    window.open(`https://wa.me/?text=${encodeURIComponent(fallbackText)}`,"_blank","noopener");
